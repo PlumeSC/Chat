@@ -1,0 +1,47 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         Int        @id @default(autoincrement()) @map("id")
+  user       String
+  chatroomsA Chatroom[] @relation("chatroomsA")
+  chatroomsB Chatroom[] @relation("chatroomsB")
+  messages   Message[]
+}
+
+model Chatroom {
+  id             Int       @id @default(autoincrement()) @map("id")
+  userA_id       Int
+  userB_id       Int
+  userA_lastseen DateTime?
+  userB_lastseen DateTime?
+  userA          User      @relation("chatroomsA", fields: [userA_id], references: [id])
+  userB          User      @relation("chatroomsB", fields: [userB_id], references: [id])
+  messages       Message[]
+}
+
+model Message {
+  id          Int          @id @default(autoincrement()) @map("id")
+  chatroom_id Int
+  sender_id   Int
+  message     String    @db.LongText
+  type        message_type
+  send_date   DateTime
+  chatroom    Chatroom     @relation(fields: [chatroom_id], references: [id])
+  sender      User         @relation(fields: [sender_id], references: [id])
+}
+
+enum message_type {
+  message
+  video
+  image
+}
