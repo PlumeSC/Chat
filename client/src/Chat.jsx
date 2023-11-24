@@ -2,16 +2,15 @@ import { useEffect, useState } from "react"
 import ScrollToBottom from "react-scroll-to-bottom";
 
 
-var xhr = new XMLHttpRequest()
 
-export default function Chat2({socket,input}){
+
+export default function Chat({socket,input}){
     const [currentMessage,setCurrentMessage] = useState(``)
     const [messageList,setMessageList] = useState([])
     const [chatroom,setChatroom] = useState(``)
     const [type,setType] = useState(``)
     const [inputText,setInputText] = useState(``)
     
-
     const sendMessage = async ()=>{
         if(currentMessage!==``){
             const messageData = {
@@ -19,7 +18,6 @@ export default function Chat2({socket,input}){
                 sender:input.sender,
                 message:currentMessage,
                 type,
-                // time: `${new Date(Date.now()).getHours()} : ${new Date(Date.now()).getMinutes()}`
                 send_date:new Date()
             }
             await socket.emit(`send_message`,messageData)

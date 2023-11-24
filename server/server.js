@@ -14,11 +14,10 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
     cors: {
-        origin: "http://localhost:5173",
+        origin: "http://localhost:5174",
         methods: ["GET", "POST"],
     },
 });
-
 
 
 io.on('connection',socket=>{
@@ -60,7 +59,6 @@ io.on('connection',socket=>{
 
     
     socket.on(`send_message`,async(data)=>{
-        // console.log(data.message);
         const {chatroom,sender,message,type} = data
         const senderId = await prisma.user.findFirst({where:{user:sender}})
         await prisma.message.create({
@@ -74,8 +72,6 @@ io.on('connection',socket=>{
         })
         io.to(chatroom).emit(`receive_message`,data)
     })
-
-
 
 
 
@@ -101,4 +97,4 @@ const createUser = async (user)=>{
     console.log(data);
 }
 
-// createUser("fluke")
+createUser("123asd")
